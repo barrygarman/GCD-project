@@ -35,36 +35,37 @@ setwd("UCI HAR Dataset")
 # https://coursera-forum-screenshots.s3.amazonaws.com/d3/2e01f0dc7c11e390ad71b4be1de5b8/Slide2.png
 
 features <- read.table("features.txt", header=FALSE)
-
 features.colnames <- features$V2
-xtrain <- read.table("train\\X_train.txt", header=FALSE, col.names=xtrain.colnames)
-xtest <- read.table("test\\X_test.txt", header=FALSE, col.names=xtest.colnames)
+
+xtrain <- read.table("train\\X_train.txt", header=FALSE, col.names=features.colnames)
+xtest <- read.table("test\\X_test.txt", header=FALSE, col.names=features.colnames)
 
 features <- rbind(xtrain, xtest)
+
 # 2 Extracts only the measurements on the mean and standard deviation for each measurement. 
-features <- features[, grep(".*\\.(mean|std)\\.\\..*", names(df), value=T)]
+features <- features[, grep(".*\\.(mean|std)\\.\\..*", names(features), value=T)]
 
+subjects.colnames <- c("subject")
+subjecttrain <- read.table("train\\subject_train.txt", header=FALSE, col.names=subjects.colnames)
+subjecttest <- read.table("test\\subject_test.txt", header=FALSE, col.names=subjects.colnames)
 
-subject.colnames <- c("subject")
-subjecttrain <- read.table("train\\subject_train.txt", header=FALSE, col.names=subject.colnames)
-subjecttest <- read.table("test\\subject_test.txt", header=FALSE, col.names=subject.colnames)
+subjects <- rbind(subjecttrain, subjecttest)
 
-subject <- rbind(subjecttrain, subjecttest)
+activities.colnames <- c("activity")
+activitytrain <- read.table("train\\y_train.txt", header=FALSE, col.names=activities.colnames)
+activitytest <- read.table("test\\y_test.txt", header=FALSE, col.names=activities.colnames)
 
-activity.colnames <- c("activity")
-activitytrain <- read.table("train\\y_train.txt", header=FALSE, col.names=activity.colnames)
-activitytest <- read.table("test\\y_test.txt", header=FALSE, col.names=activity.colnames)
-
-activity <- rbind(activitytrain, activitytest)
+activities <- rbind(activitytrain, activitytest)
 
 # 3 Uses descriptive activity names to name the activities in the data set
 
-activitylabels <- read.table("activity_labels.txt", header=FALSE, col.names=c("activity", "activityName"))
-activity <- merge(activity, activitylabels, by="activity", sort=F)
-subjectactivity <- cbind(subject, data.frame(activity = activity$activityName))
+activity.labels <- read.table("activity_labels.txt", header=FALSE, col.names=c("activity", "activityName"))
+activities <- merge(activities, activity.labels, by="activity", sort=F)
+
+subject.activities <- cbind(subjects, data.frame(activity = activities$activityName))
 
 # 1 Merges the training and the test sets to create one data set.
-df <- cbind(features, subjectactivity)
+df <- cbind(features, subject.activities)
 
 # 4 Appropriately labels the data set with descriptive activity names.
 colnames(df) <- tolower(str_replace_all(colnames(df), "([A-Z]{1})", ".\\1"))
@@ -92,7 +93,7 @@ for(subj in unique(melted$subject)){
 }
 
 # remove the first N/A row
-tidy <- tidy[-1,]
+tidy <- na.omit(tidy)
 # reorderding of columns: first subject, then activity, then the values
 tidy <- tidy[,c(67,68, 1:66)]
 
