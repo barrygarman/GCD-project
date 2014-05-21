@@ -1,6 +1,6 @@
-# https://class.coursera.org/getdata-003/human_grading/view/courses/972136/assessments/3/submissions
+working.directory <- "C:\\Users\\dgraziotin\\Documents\\GitHub\\GCD-project"
 
-setwd("C:\\Users\\dgraziotin\\Documents\\GitHub\\GCD-project")
+setwd(working.directory)
 
 if (!require("stringr")){
   install.packages("stringr", dependencies=TRUE)
@@ -77,12 +77,13 @@ tidy[1,] <- rep(NA, 68)
 melted <- melt(df, id=c("subject","activity"))
 
 # 5 Creates a second, independent tidy data set with the average of each variable for each activity and each subject. 
+
 for(subj in unique(melted$subject)){
   means <- c()
   for(acti in unique(melted[melted$subject == subj,]$activity)){
     for(vari in unique(melted[melted$subject == subj,]$variable)){
       m <- mean(melted[melted$subject == subj & melted$activity == acti & melted$variable == vari,]$value)
-      means <- append(means, m)
+      means <- append(means, as.numeric(m))
     }
     means <- append(means, subj)
     means <- append(means, acti)
@@ -90,4 +91,9 @@ for(subj in unique(melted$subject)){
   }
 }
 
+# remove the first N/A row
 tidy <- tidy[-1,]
+# reorderding of columns: first subject, then activity, then the values
+tidy <- tidy[,c(67,68, 1:66)]
+
+write.table(tidy, file="tidymeans.txt", quote=FALSE)
