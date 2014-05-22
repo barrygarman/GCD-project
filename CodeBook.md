@@ -25,7 +25,7 @@ Original dataset description taken from its website:
 
 ##Data Acquisition
 
-The data is acquired automatically by the script. Please make sure to set your working directory at line 5 of the script, variable ```working.directory```.
+The data is acquired automatically by the script. Please make sure to set your working directory at line 6 of the script, variable ```working.directory```.
 
 When the script is run, the following steps happen for obtaining the data:
 
