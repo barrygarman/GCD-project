@@ -1,15 +1,13 @@
+#CodeBook
 
-CodeBook
---------
 
-Original Data
--------------
+##Original Data
 
 This dataset is a tiny dataset resulted from a transformation of a bigger set of data, namely
 
-Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. Human Activity Recognition on Smartphones using a Multiclass Hardware-Friendly Support Vector Machine. International Workshop of Ambient Assisted Living (IWAAL 2012). Vitoria-Gasteiz, Spain. Dec 2012
+    Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. Human Activity Recognition on Smartphones using a Multiclass Hardware-Friendly Support Vector Machine. International Workshop of Ambient Assisted Living (IWAAL 2012). Vitoria-Gasteiz, Spain. Dec 2012
 
-The originary data source can be found at http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
+The original data source can be found at http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
 
 Original dataset description taken from its website:
 
@@ -25,29 +23,25 @@ Original dataset description taken from its website:
     - An identifier of the subject who carried out the experiment.
 
 
+##Data Acquisition
 
+The data is acquired automatically by the script. Please make sure to set your working directory at line 5 of the script, variable ```working.directory```.
 
-Data Acquisition
-----------------
+When the script is run, the following steps happen for obtaining the data:
 
-The data is acquired automatically by the script. Please make sure to set your working directory at line 1 of the script, variable working.directory.
+ 1. A directory named data is created (if not already existing) in the current working directory
+ 2. The working directory is switched to the data folder
+ 3. If the original data set (named *dataset.zip*) does not exist already, the data set is downloaded from https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip and named dataset.zip
+ 4. The dataset is unzipped. The original dataset is present in data/UCI HAR
 
-When the script is run, the following steps happen for obtaining the data
-
-1. A directory named data is created (if not already existing) in the current working directory
-2. The working directory is switched to the data folder
-3. If the original data set (named dataset.zip) does not exist already, the data set is downloaded from https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip and named dataset.zip
-4. The dataset is unzipped. The original dataset is present in data/UCI HAR
-
-Data Transformation
--------------------
+##Data Transformation
 
 Starting from the originary dataset, the following high-level steps are performed
 
  1. The files features.txt, *train/X_train.txt*, and *test/X_test.txt* are loaded as data tables. The X_ tables are combined via ```rbind()```. At this point, the initial dataframe *features* is comprised of 561 variables, as follows.
 
  |features   |
- |-----------|
+ |:----------|
  |X_train    |
  |X_test     |
  | VARS:561  |
@@ -55,7 +49,7 @@ Starting from the originary dataset, the following high-level steps are performe
  2. As requested by step 2 of the [Project page](https://class.coursera.org/getdata-003/human_grading/view/courses/972136/assessments/3/submissions), only the measurements of the mean and the standard deviation are retained from the originary dataset. This is achieved via ```df <- df[, grep(".*\\.(mean|std)\\.\\..*", names(df), value=T)]``` The intermediary dataframe *features* is comprised of 66 variables at this point
 
  |features   |
- |-----------|
+ |:----------|
  |X_train    |
  |X_test     |
  | VARS:66   |
@@ -63,23 +57,23 @@ Starting from the originary dataset, the following high-level steps are performe
  3. The subject files *train\subject_train.tx*t and *test\subject_test.txt* are loaded and combined via the rbind() command
 
  |subjects       |
- |---------------|
+ |:--------------|
  |Subject_train  |
  |Subject_test   |
  | VARS: 1       |
  | OBSS:10299    |
  4. The activity files *train\y_train.txt* and *test\y_test.txt* are loaded and combined via the rbind() command in the *activities* dataframe
 
- |activities     |
- |---------------|
+ | activities    |
+ |:--------------|
  |y_train        |
  |y_test         |
  | VARS: 1       |
  | OBSS:10299    |
  5. As requested by step 3 of the Project page, the descriptive names for the activities, found in *activity_labels.txt*, are used in the intermediary *activities* dataset. The dataframes *subjects* and *activities* are cbind()'ed
 
- |subjects       | activities |
- |---------------|-------------
+ | subjects      | activities |
+ |:--------------|:------------
  |Subject_train  | y_train    |
  |Subject_test   | y_test     |
  | VARS: 1       | VARS: 1    |
@@ -87,7 +81,7 @@ Starting from the originary dataset, the following high-level steps are performe
  6. Point 1 of the Project page is performed. The training and the test sets are merged to create one data set. At this point, the dataset is in the form ![form suggested in Coursera forms:](https://coursera-forum-screenshots.s3.amazonaws.com/d3/2e01f0dc7c11e390ad71b4be1de5b8/Slide2.png)
 
  |features   |subjects       | activities |
- |-----------|---------------|-------------
+ |:----------|:--------------|:-----------|
  |X_train    |Subject_train  | y_train    |
  |X_test     |Subject_test   | y_test     |
  | VARS:66   | VARS: 1       | VARS: 1    |
@@ -100,8 +94,7 @@ Starting from the originary dataset, the following high-level steps are performe
  11. The dataset *tidymeans.txt* is produced and exported in the original working directory (where the script is).
 
 
-Variables
----------
+##Variables
 
 The following is a table representing the variables of the tidy dataset. They are provided as they appear in the dataset.
 Variable subject is the participant anonymous code from the original experiment. It is an integer number ranging from 0 to 30.
@@ -111,7 +104,7 @@ All the other variables (ID 3 to 68) are the average of each original variable (
 
 
 | ID | Name                           | Original Name             |
-|----|--------------------------------|---------------------------|
+|---:|:-------------------------------|:--------------------------|
 | 1  | subject                        | N/A                       |
 | 2  | activity                       | N/A                       |
 | 3  | t.body.acc.mean.x              | tBodyAcc-mean(x)          |
@@ -189,3 +182,9 @@ The features variables generally follow the following naming convention
 where
 
 t is time, f is the frequency, body and gravity are reference frames, acc is the accelerometer, gyro is the gyroscope, mag is the euclidean magnitude, mean is the average value, and std is the standard deviation. Jerk, where present, is the jerk signal, as opposed to smooth signal (everything else)
+
+##Dataset format
+
+The tidy dataset is a fixed length format "CSV" as the write.table() R function outputs typically.
+The first row contains the variable names, separated by a single space character.
+All the subsequent rows are dataset entries, still separated by a single space character.
