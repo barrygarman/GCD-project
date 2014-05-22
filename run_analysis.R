@@ -3,7 +3,7 @@
 # The license of this script is the WTFPL (see COPYING)
 # Only thing you need to do is to setup the following variable to be your working directory.
 
-working.directory <- "C:/Users/dgraziotin/Documents/GitHub/GCD-project" # '/' works in R windows, too.
+working.directory <- "" # '/' works in R windows, too.
 
 if (nchar(working.directory) == 0){
   stop("In order to use this script, please setup the working.directory variable to point to your working directory")
